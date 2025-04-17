@@ -5,10 +5,7 @@ module.exports = {
     project: "./tsconfig.json",
   },
   plugins: ["@typescript-eslint"],
-  extends: [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
-  ],
+  extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   rules: {
     "@typescript-eslint/consistent-type-imports": [
       "warn",
@@ -18,5 +15,7 @@ module.exports = {
       },
     ],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "@next/next/no-img-element": "off",
+    "@typescript-eslint/no-explicit-any": "off",
   },
 };
