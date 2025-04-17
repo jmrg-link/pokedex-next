@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Pokemon Database",
+      "Group": "Server Pokemon DB",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "pokemon_db",
+      "Username": "postgres",
+      "SSLMode": "prefer"
+    }
+  }
+}

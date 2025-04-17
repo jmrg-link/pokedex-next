@@ -1,0 +1,45 @@
+name: postgresql-prisma-pgadmin
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres-pokemon
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pokemon_db
+    volumes:
+      - postgresql-prisma-data:/var/lib/postgresql/data
+    ports:
+      - "5440:5432"
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+      PGADMIN_CONFIG_SERVER_MODE: "True"
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+      - pgadmin-web-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-pokemon
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+volumes:
+  postgresql-prisma-data:
+  pgadmin-web-data:
+  redis-data:

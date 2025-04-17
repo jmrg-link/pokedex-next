@@ -1,0 +1,19 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Generador del cliente Prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Modelo de ejemplo: Pokemon (cache básico en DB, si se quisiera almacenar)
+model Pokemon {
+  id          Int      @id @default(autoincrement())
+  name        String
+  generation  Int?
+  types       String[] // Lista de tipos (ej: ["Electric", "Flying"])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

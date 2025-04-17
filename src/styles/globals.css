@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/**
+ * Variables globales y utilidades
+ * @file src/styles/globals.css
+ */
+:root {
+  --header-h: 4rem;
+}
+
+html,
+body,
+#__next {
+  min-height: 100dvh;
+}
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+}
+
+@layer utilities {
+  .content-auto {
+    content-visibility: auto;
+  }
+}
