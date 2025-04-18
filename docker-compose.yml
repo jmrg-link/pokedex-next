@@ -4,13 +4,13 @@ services:
     image: postgres:15
     container_name: postgres-pokemon
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: pokemon_db
+      POSTGRES_USER:     "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB:       "${POSTGRES_DB}"
     volumes:
       - postgresql-prisma-data:/var/lib/postgresql/data
     ports:
-      - "5440:5432"
+      - "${POSTGRES_PORT}:5432"
     restart: unless-stopped
 
   pgadmin:
@@ -19,10 +19,10 @@ services:
     depends_on:
       - postgres
     environment:
-      PGADMIN_DEFAULT_EMAIL: pgadmin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_DEFAULT_EMAIL:    "${PGADMIN_DEFAULT_EMAIL}"
+      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
       PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
-      PGADMIN_CONFIG_SERVER_MODE: "True"
+      PGADMIN_CONFIG_SERVER_MODE: "${PGADMIN_CONFIG_SERVER_MODE}"
     volumes:
       - ./servers.json:/pgadmin4/servers.json
       - pgadmin-web-data:/var/lib/pgadmin
@@ -33,13 +33,39 @@ services:
   redis:
     image: redis:7-alpine
     container_name: redis-pokemon
-    ports:
-      - "6379:6379"
+    command:
+      - redis-server
+      - "--requirepass"
+      - "${REDIS_PASSWORD}"
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
     volumes:
       - redis-data:/data
+    ports:
+      - "${REDIS_PORT}:6379"
+    restart: unless-stopped
+
+  nextjs:
+    image: my-nextjs-app:latest
+    container_name: nextjs-pokemon
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+    environment:
+      - PORT=${NEXTJS_PORT}
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - CACHE_LOG_HITS=${CACHE_LOG_HITS}
+    ports:
+      - "${NEXTJS_PORT}:${NEXTJS_PORT}"
     restart: unless-stopped
 
 volumes:
   postgresql-prisma-data:
   pgadmin-web-data:
   redis-data:
+
